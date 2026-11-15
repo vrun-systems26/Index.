@@ -65,5 +65,3 @@ Storage assumes you can reach, see, search and remember. Labels still make you r
 ## Axis convention
 X = horizontal · Y = rack depth · Z = vertical
 
----
-Built in November 2026. Also submitted to NorCal Hacks 27 (New Frontiers).

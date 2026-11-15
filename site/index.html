@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index · robotic cabinet</title>
+<meta name="description" content="Index is a voice-controlled robotic cabinet. Ask for what you need and a 3-axis robot brings you the exact tray.">
+<meta property="og:title" content="Index · Ask for it, and it's in your hand.">
+<meta property="og:description" content="A voice-controlled robotic cabinet that fetches the exact tray you need.">
+<meta property="og:image" content="img/og.jpg">
+<style>
+:root{--bg:#0d1a1d;--bg2:#13282a;--card:#172f30;--line:#24433f;--teal:#46b2a0;--tealD:#2a5f5a;--peach:#f9bfa5;--cream:#fde9d6;--text:#f3f1ec;--muted:#93aaa6;--red:#e87064}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+a{color:var(--peach)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:20;background:#0d1a1dee;backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;gap:18px;height:60px;overflow-x:auto}
+nav .logo{font-weight:900;font-size:22px;margin-right:auto;white-space:nowrap}.logo span{color:var(--peach)}
+nav a{color:var(--muted);text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap}nav a:hover{color:var(--text)}
+section{padding:72px 0;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(54px,9vw,104px);line-height:1;margin:0 0 14px;font-weight:900;letter-spacing:-2px}
+h2{font-size:clamp(30px,4vw,42px);margin:0 0 8px;font-weight:800}
+.kicker{color:var(--peach);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:13px;margin-bottom:10px}
+.lead{font-size:19px;color:#d8e2df;max-width:680px}
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;padding:56px 0 64px}
+.hero img{width:100%;border-radius:22px;border:3px solid var(--tealD);box-shadow:0 30px 60px #0008}
+.tag{font-size:28px;color:var(--peach);font-weight:600;margin:0 0 18px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-block;border:0;border-radius:999px;padding:13px 22px;font:700 15px "Segoe UI",system-ui;cursor:pointer;text-decoration:none;background:var(--card);color:var(--text);border:1px solid var(--line)}
+.btn.p{background:var(--teal);color:#0d1a1d;border-color:var(--teal)}.btn:hover{filter:brightness(1.1)}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stat b{display:block;font-size:30px;color:var(--peach);font-weight:900;line-height:1.1}.stat span{font-size:13px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:28px}
+.grid2>*,.hero>*{min-width:0}
+.lead code,.note code{word-break:break-all}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.panel h3{margin:0 0 10px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+svg text{font-family:"Segoe UI",system-ui,sans-serif}
+.cells{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.cell{background:#0f2224;border:1px solid var(--line);border-radius:10px;padding:8px;font-size:12.5px;cursor:pointer;min-height:58px;color:var(--text);text-align:left;font-family:inherit}
+.cell small{display:block;color:var(--muted);font:11px Consolas,monospace}
+.cell:hover{border-color:var(--teal)}.cell.out{background:var(--tealD);border-color:var(--peach)}.cell.empty{color:#5d7471;font-style:italic;cursor:default}
+.cell.hit{border-color:var(--peach);box-shadow:0 0 0 2px #f9bfa555}
+.ask{display:flex;gap:8px;margin-bottom:8px}
+.ask input{flex:1;background:#0f2224;border:1px solid var(--line);border-radius:12px;padding:12px;color:var(--text);font:15px inherit}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.chips button{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.chips button:hover{color:var(--text);border-color:var(--teal)}
+.reply{background:#0f2224;border-left:4px solid var(--teal);border-radius:10px;padding:10px 12px;min-height:46px;font-size:14.5px;margin-bottom:10px}
+.reply .row{display:flex;gap:8px;margin-top:8px}
+.log{background:#081214;border-radius:12px;padding:10px;height:170px;overflow:auto;font:12.5px Consolas,monospace;color:#a6d6cc}
+.log div{margin:2px 0}.log .me{color:var(--peach)}.log .err{color:var(--red)}
+.status{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--tealD);border-radius:12px;padding:10px 14px;margin:10px 0;font-weight:600}
+.status.idle{background:#0f2224;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+.detail{background:#0f2224;border-radius:14px;padding:16px;min-height:150px}
+.detail h4{margin:0 0 6px;font-size:20px;color:var(--peach)}.detail p{margin:6px 0;color:#d8e2df;font-size:14.5px}
+.detail code{background:#081214;padding:1px 6px;border-radius:6px;color:#a6d6cc}
+.node{cursor:pointer}.node rect{transition:.15s}.node:hover rect{stroke:var(--peach)}
+.node.sel rect{stroke:var(--peach);stroke-width:3;fill:#24433f}
+.wire{transition:.2s}.dim .wire{opacity:.15}.dim .wire.on{opacity:1;stroke-width:5}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+.steps div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13.5px;color:#d8e2df}
+.steps b{display:block;color:var(--peach);font-size:15px;margin-bottom:4px}
+.photos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:24px}
+.photos figure{margin:0}.photos img{width:100%;height:260px;object-fit:cover;border-radius:16px;border:1px solid var(--line)}
+.photos figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+footer{padding:40px 0;color:var(--muted);font-size:14px}
+@media(max-width:900px){.hero,.grid2{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.steps{grid-template-columns:1fr 1fr}.photos{grid-template-columns:1fr}}
+@media(max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}.cells{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+  <div class="logo">Index<span>.</span></div>
+  <a href="#try">Try it</a><a href="#hardware">Hardware</a><a href="#software">Software</a><a href="#build">Build</a><a href="voice.html">Voice page</a><a href="#video" id="navVideo" hidden>Video</a>
+</div></nav>
+
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="kicker">Voice-controlled robotic cabinet</div>
+      <h1>Index<span style="color:var(--peach)">.</span></h1>
+      <p class="tag">Ask for it, and it's in your hand.</p>
+      <p class="lead">Storage assumes you can reach, see, search and remember. Index doesn't. Ask for what you need by voice or from your phone. A 3-axis robot pulls out the exact tray, brings it to one spot within reach, and puts it back when you're done.</p>
+      <div class="btns"><a class="btn p" href="#try">Try the simulator ↓</a><a class="btn" href="#hardware">How it's built</a><a class="btn" id="heroVideo" href="#video" hidden>▶ Watch the pitch</a></div>
+    </div>
+    <img src="img/robot.jpg" alt="The Index robot: a vertical rail and rack in front of a 15-compartment cabinet, with the control page on a laptop">
+  </div>
+  <div class="stats">
+    <div class="stat"><b>15</b><span>compartments (3 × 5)</span></div>
+    <div class="stat"><b>3</b><span>axes: X, Z belts + Y rack</span></div>
+    <div class="stat"><b>0.2 mm</b><span>positioning step</span></div>
+    <div class="stat"><b>1</b><span>ESP32 runs everything</span></div>
+    <div class="stat"><b>0</b><span>apps or internet needed</span></div>
+    <div class="stat"><b>≈ $300</b><span>in parts</span></div>
+  </div>
+</div>
+
+<!-- ============ SIMULATOR ============ -->
+<section id="try"><div class="wrap">
+  <div class="kicker">Interactive</div>
+  <h2>Try Index</h2>
+  <p class="lead">This simulator runs the same logic as the real robot. Ask in plain words or tap a compartment. It sends <code>GO n</code>, waits for <code>ACK n</code>, fetches the tray, and puts it back.</p>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Front view · live</h3>
+      <svg id="sim" viewBox="0 0 620 470" style="width:100%;display:block">
+        <defs><linearGradient id="cab" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#d9d6cf"/><stop offset="1" stop-color="#b9b5ad"/></linearGradient></defs>
+        <rect x="0" y="0" width="620" height="470" rx="16" fill="#0f2224"/>
+        <rect x="70" y="440" width="500" height="10" rx="4" fill="#1d1d1d"/>                         <!-- X rail -->
+        <text x="320" y="464" fill="#93aaa6" font-size="12" text-anchor="middle">X rail (belt + stepper)</text>
+        <rect x="190" y="138" width="320" height="270" rx="10" fill="url(#cab)"/>                    <!-- cabinet -->
+        <rect x="200" y="400" width="12" height="40" fill="#3b8fd6"/><rect x="488" y="400" width="12" height="40" fill="#3b8fd6"/>
+        <rect x="186" y="126" width="328" height="14" rx="5" fill="#3b8fd6"/>                       <!-- top beam -->
+        <text x="350" y="100" fill="#f9bfa5" font-size="12" text-anchor="middle" font-weight="700">DELIVERY SPOT</text>
+        <rect x="300" y="106" width="100" height="18" rx="4" fill="none" stroke="#f9bfa5" stroke-dasharray="5 4"/>
+        <g id="slots"></g>
+        <g id="delivered"></g>
+        <g id="gantry">
+          <rect id="zrail" x="-7" y="20" width="14" height="420" rx="3" fill="#151515" opacity=".88"/>
+          <text x="0" y="14" fill="#93aaa6" font-size="11" text-anchor="middle">Z rail</text>
+          <g id="carriage">
+            <rect x="-26" y="-16" width="52" height="32" rx="6" fill="#2a2a2a" stroke="#46b2a0" stroke-width="2"/>
+            <circle id="mag" cx="0" cy="0" r="9" fill="#777"/>
+            <g id="held"></g>
+          </g>
+        </g>
+        <text id="simLabel" x="310" y="40" fill="#f3f1ec" font-size="15" font-weight="700" text-anchor="middle"></text>
+      </svg>
+      <h3 style="margin-top:12px">Side view · Y rack + electromagnet</h3>
+      <svg id="side" viewBox="0 0 620 130" style="width:100%;display:block">
+        <rect x="0" y="0" width="620" height="130" rx="12" fill="#0f2224"/>
+        <rect x="380" y="28" width="220" height="10" fill="#c9c5bd"/><rect x="380" y="96" width="220" height="10" fill="#c9c5bd"/>
+        <text x="590" y="122" fill="#93aaa6" font-size="11" text-anchor="end">cabinet slot</text>
+        <rect x="40" y="40" width="40" height="56" rx="6" fill="#2a2a2a" stroke="#46b2a0" stroke-width="2"/>
+        <text x="60" y="122" fill="#93aaa6" font-size="11" text-anchor="middle">servo</text>
+        <g id="sideTray"><rect x="0" y="48" width="160" height="40" rx="6" fill="#d8be9f"/><circle cx="8" cy="68" r="7" fill="#9a9aa0"/></g>
+        <g id="sideArm"><rect x="0" y="62" width="300" height="10" rx="3" fill="#5c6766"/><circle id="sideMag" cx="300" cy="67" r="12" fill="#777"/></g>
+        <text id="sideLabel" x="210" y="22" fill="#f9bfa5" font-size="13" font-weight="700" text-anchor="middle"></text>
+      </svg>
+    </div>
+    <div class="panel">
+      <h3>Ask Index</h3>
+      <div class="ask"><input id="q" placeholder="e.g. I have an itchy eye" autocomplete="off"><button class="btn p" id="askBtn">Ask</button></div>
+      <div class="chips" id="chips"></div>
+      <div class="reply" id="reply">Hi, I'm Index. What can I get for you?</div>
+      <div class="status idle" id="status"><span id="statusTxt">No tray out</span><button class="btn" id="retBtn" hidden>Return tray</button></div>
+      <h3>Or tap a compartment</h3>
+      <div class="cells" id="cells"></div>
+      <h3 style="margin-top:14px">USB serial log</h3>
+      <div class="log" id="log"></div>
+      <p class="note">Simulation for the web. On the real robot, an ElevenLabs voice agent does the understanding, with the same rules: it only offers what's in stock, it never gives medical advice, and it moves only after you say yes. The robot must reply <code>ACK n</code> for the exact compartment, or the request is rejected.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ HARDWARE ============ -->
+<section id="hardware"><div class="wrap">
+  <div class="kicker">Hardware</div>
+  <h2>Wiring diagram</h2>
+  <p class="lead">Everything runs on one Maker-ESP32 board, which has two built-in H-bridge stepper drivers. Click any part to see its pins and its job.</p>
+  <div class="grid2">
+    <div class="panel"><svg id="wiring" viewBox="0 0 900 600" style="width:100%;display:block"></svg></div>
+    <div class="panel"><h3>Selected part</h3><div class="detail" id="hwDetail"></div>
+      <h3 style="margin-top:16px">Axis convention</h3>
+      <div class="detail"><p><b style="color:var(--peach)">X</b> horizontal · stepper + GT2 belt on a linear rail · 5 steps/mm</p><p><b style="color:var(--peach)">Z</b> vertical · stepper + GT2 belt on a linear rail · up is positive</p><p><b style="color:var(--peach)">Y</b> depth · servo rack &amp; pinion · 175° retracted, lower = extended</p></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============ SOFTWARE ============ -->
+<section id="software"><div class="wrap">
+  <div class="kicker">Software</div>
+  <h2>From words to motion</h2>
+  <p class="lead">There are two ways in, by voice over USB or by phone over Wi-Fi. Both end at the same firmware commands. Click a block to see what it does.</p>
+  <div class="grid2">
+    <div class="panel"><svg id="flow" viewBox="0 0 900 640" style="width:100%;display:block"></svg></div>
+    <div class="panel"><h3>Selected block</h3><div class="detail" id="swDetail"></div></div>
+  </div>
+  <h3 style="margin:30px 0 0;color:var(--muted);font-size:13px;letter-spacing:.1em;text-transform:uppercase">A retrieval, step by step (firmware sequencer)</h3>
+  <div class="steps">
+    <div><b>1 · Home</b>Retract the rack, then find Z-min and X-min with the limit switches. Skipped if already homed.</div>
+    <div><b>2 · Move</b>X and Z travel together to the taught compartment position.</div>
+    <div><b>3 · Grab</b>The rack extends to the reach angle, the magnet turns on, and after a 400 ms settle the tray is pulled out.</div>
+    <div><b>4 · Deliver</b>Rise to the delivery height, move across, and set the tray on top. The magnet keeps holding.</div>
+    <div><b>5 · Return</b>Go in 3 mm higher, push in, magnet off, slide up 10 mm, retract, park, then release the motors.</div>
+  </div>
+</div></section>
+
+<!-- ============ BUILD ============ -->
+<section id="build"><div class="wrap">
+  <div class="kicker">Build log</div>
+  <h2>From a rail on a board to a working robot</h2>
+  <div class="photos">
+    <figure><img src="img/start.jpg" alt="Early build: a single rail on a wooden board with parts laid out"><figcaption>Day one: the X rail, the Z rail and a pile of parts.</figcaption></figure>
+    <figure><img src="img/build.jpg" alt="The gantry with the 15-compartment cabinet mounted beside it"><figcaption>The gantry, the cabinet and the wiring come together.</figcaption></figure>
+    <figure><img src="img/robot.jpg" alt="The finished Index robot with its control page"><figcaption>The finished robot with its control page.</figcaption></figure>
+  </div>
+  <h3 style="margin:36px 0 8px;font-size:22px">Hardest problems solved</h3>
+  <div class="steps">
+    <div><b>Trays catching</b>Going back in, trays hit the opening. Fix: return 3 mm higher than the pickup height.</div>
+    <div><b>Trays dragged out</b>After the magnet turned off, friction pulled the tray back out. Fix: slide up 10 mm off the washer before retracting.</div>
+    <div><b>Switch bounce</b>Limit switches bounced when released. Fix: debouncing plus a re-arm distance.</div>
+    <div><b>Battery in minutes</b>The drivers held full current while idle. Fix: release the motors when idle, and use a wall supply.</div>
+    <div><b>Rail on a rail</b>Balancing a long Z rail and the Y rack on the X carriage without wobble.</div>
+  </div>
+</div></section>
+
+<section id="video" hidden><div class="wrap">
+  <div class="kicker">Pitch</div><h2>Watch the 5-minute pitch</h2>
+  <div style="position:relative;padding-top:56.25%;margin-top:22px;border-radius:18px;overflow:hidden;border:2px solid var(--tealD)">
+    <iframe src="https://www.youtube-nocookie.com/embed/mBE0BZBnR84" title="Index pitch video" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>
+  </div>
+  <p class="lead" style="margin-top:12px"><a id="videoLink" href="#" target="_blank" rel="noopener">Open on YouTube ↗</a></p>
+</div></section>
+
+<footer><div class="wrap">Index · built with ESP32, Arduino C++, AccelStepper, a servo rack &amp; pinion, an electromagnet, 3D-printed trays, Web Serial, and an ElevenLabs voice agent. The <a href="voice.html">voice page</a> is the real control page. Without the robot plugged in, it runs in simulation.</div></footer>
+
+<script>
+const VIDEO_URL = "https://youtu.be/mBE0BZBnR84";
+if (VIDEO_URL) { for (const id of ["video","navVideo","heroVideo"]) document.getElementById(id).hidden = false; document.getElementById("videoLink").href = VIDEO_URL; }
+
+const $ = id => document.getElementById(id);
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// ================= SIMULATOR =================
+const INV = ["Bandages","Ear drops","Ibuprofen","Allergy tablets","Thermometer","Cough syrup","Tweezers","Gauze","Antiseptic wipes","Eye drops","Screwdriver","AA batteries","Duct tape","Scissors",""];
+const cellPos = n => { const i = n - 1, c = i % 5, r = Math.floor(i / 5); return { x: 222 + c * 64, y: 160 + r * 84 }; };
+const HOME = { x: 110, z: 412 }, DELIV = { x: 350, z: 98 };
+let st = { x: HOME.x, z: HOME.z, ext: 0, mag: false, held: 0 }, busy = false, out = 0;
+
+const slots = $("slots");
+for (let n = 1; n <= 15; n++) {
+  const p = cellPos(n);
+  const g = el("g", { id: "slot" + n }, slots);
+  el("rect", { x: p.x - 28, y: p.y - 34, width: 56, height: 70, rx: 6, fill: "#efece6", stroke: "#a9a49b" }, g);
+  el("rect", { class: "tray", x: p.x - 22, y: p.y - 28, width: 44, height: 58, rx: 5, fill: INV[n - 1] ? "#cfc9bf" : "#e4e0d8" }, g);
+  if (INV[n - 1]) el("circle", { class: "tray", cx: p.x, cy: p.y, r: 5, fill: "#5e5e63" }, g);
+  el("text", { x: p.x - 22, y: p.y - 18, "font-size": 10, fill: "#6d665c", "font-family": "Consolas,monospace" }, g, String(n).padStart(2, "0"));
+}
+function draw() {
+  $("gantry").setAttribute("transform", `translate(${st.x},0)`);
+  $("carriage").setAttribute("transform", `translate(0,${st.z})`);
+  $("mag").setAttribute("fill", st.mag ? "#e87064" : "#777");
+  $("sideMag").setAttribute("fill", st.mag ? "#e87064" : "#777");
+  $("sideArm").setAttribute("transform", `translate(${-200 + st.ext * 300},0)`);
+}
+function setTraySide(mode) {   // where the tray sits in the side view
+  const t = $("sideTray");
+  if (mode === "slot") t.setAttribute("transform", "translate(410,0)");
+  else if (mode === "arm") t.setAttribute("transform", `translate(${-200 + st.ext * 300 + 312},0)`);
+  t.style.opacity = mode === "none" ? 0 : 1;
+}
+async function tween(to, ms, onStep) {
+  const from = { ...st }, t0 = performance.now();
+  return new Promise(res => {
+    function f(now) {
+      const p = Math.min((now - t0) / ms, 1), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      for (const k in to) st[k] = from[k] + (to[k] - from[k]) * e;
+      draw(); if (onStep) onStep();
+      p < 1 ? requestAnimationFrame(f) : res();
+    }
+    requestAnimationFrame(f);
+  });
+}
+function label(s) { $("simLabel").textContent = s; }
+function sideLabel(s) { $("sideLabel").textContent = s; }
+function hold(n) {
+  st.held = n; const h = $("held"); h.innerHTML = "";
+  if (n) { el("rect", { x: -22, y: -29, width: 44, height: 58, rx: 5, fill: "#d8be9f", stroke: "#f9bfa5", "stroke-width": 2 }, h); el("text", { x: 0, y: 44, "font-size": 11, fill: "#f9bfa5", "text-anchor": "middle", "font-weight": 700 }, h, INV[n - 1]); }
+}
+function showSlot(n, present) { $("slot" + n).querySelectorAll(".tray").forEach(e => e.style.opacity = present ? 1 : 0); }
+function delivered(n) {
+  const d = $("delivered"); d.innerHTML = "";
+  if (n) { el("rect", { x: 306, y: 84, width: 88, height: 40, rx: 6, fill: "#d8be9f", stroke: "#f9bfa5", "stroke-width": 2 }, d); el("text", { x: 350, y: 109, "font-size": 12, fill: "#3a2a20", "text-anchor": "middle", "font-weight": 700 }, d, INV[n - 1]); }
+}
+function log(s, cls) { const d = document.createElement("div"); d.textContent = s; if (cls) d.className = cls; $("log").appendChild(d); $("log").scrollTop = 1e6; }
+function renderCells() {
+  const c = $("cells"); c.innerHTML = "";
+  INV.forEach((name, i) => {
+    const n = i + 1, b = document.createElement("button");
+    b.className = "cell" + (name ? "" : " empty") + (out === n ? " out" : ""); b.id = "cell" + n;
+    b.innerHTML = `<small>${String(n).padStart(2, "0")} · R${Math.floor(i / 5) + 1} C${i % 5 + 1}</small>${name || "empty"}`;
+    b.onclick = () => name && retrieve(n, "tap");
+    c.appendChild(b);
+  });
+  $("status").className = "status" + (out ? "" : " idle");
+  $("statusTxt").textContent = out ? `Compartment ${out} · ${INV[out - 1]} is ready` : busy ? "Robot moving…" : "No tray out";
+  $("retBtn").hidden = !out || busy;
+}
+
+async function retrieve(n, src) {
+  if (busy) { log("ERR busy", "err"); return; }
+  if (out === n) { reply(`Compartment ${n} (${INV[n - 1]}) is already at the delivery spot.`); return; }
+  if (out) { log(`ERR compartment ${out} is still out → returning it first`, "err"); await doReturn(); }
+  busy = true; renderCells();
+  log(`→ GO ${n}`, "me"); await sleep(250);
+  log(`ESP32: >>> Retrieving ${n} (${INV[n - 1]})`); log(`ESP32: ACK ${n}`); log(`✓ robot confirmed ACK ${n}`);
+  const p = cellPos(n);
+  label(`Moving to compartment ${n}`); sideLabel(""); setTraySide("slot");
+  await tween({ x: p.x, z: p.y }, 1100);
+  label("Rack extends · magnet on"); sideLabel("extend → magnet ON");
+  await tween({ ext: 1 }, 600); st.mag = true; draw(); await sleep(400);
+  label("Pulling the tray out"); sideLabel("pull the tray out");
+  showSlot(n, false); hold(n);
+  await tween({ ext: 0 }, 600, () => setTraySide("arm"));
+  label("Rising to the delivery spot"); sideLabel("");
+  await tween({ z: DELIV.z }, 900);
+  await tween({ x: DELIV.x }, 800);
+  hold(0); delivered(n);
+  label(`${INV[n - 1]} is ready`);
+  log(`ESP32: >>> Compartment ${n} (${INV[n - 1]}) is ready. Press Return when done.`);
+  out = n; busy = false; renderCells();
+}
+async function doReturn() {
+  if (!out || busy) return;
+  const n = out, p = cellPos(n); busy = true; renderCells();
+  log("→ RET", "me"); log("ESP32: OK");
+  delivered(0); hold(n);
+  label("Carrying the tray back"); setTraySide("arm");
+  await tween({ x: p.x }, 900); await tween({ z: p.y - 6 }, 800);
+  label("+3 mm higher so it clears the opening"); sideLabel("+3 mm higher · push in");
+  await tween({ ext: 1 }, 600, () => setTraySide("arm"));
+  hold(0); showSlot(n, true); st.mag = false; draw(); setTraySide("slot");
+  label("Magnet off"); sideLabel("magnet OFF"); await sleep(400);
+  label("Slide up 10 mm so the tray stays put"); sideLabel("slide up 10 mm, then retract");
+  await tween({ z: p.y - 20 }, 400); await tween({ ext: 0 }, 500);
+  label("Parking"); sideLabel("");
+  await tween({ x: HOME.x, z: HOME.z }, 1100);
+  log(`ESP32: >>> Compartment ${n} returned.`);
+  label(""); out = 0; busy = false; renderCells();
+}
+$("retBtn").onclick = doReturn;
+
+// ---- "Ask Index": simple keyword matching that stands in for the voice agent ----
+const KEYS = [
+  [/itch|eye|red eye|dry eye/, 10], [/ear/, 2], [/headache|head hurts|pain|fever|sore|ache/, 3], [/allerg|sneez|pollen|hay/, 4],
+  [/temperature|thermometer|hot|feverish/, 5], [/cough|throat/, 6], [/splinter|tweezer/, 7], [/bleed|wound|gauze/, 8],
+  [/clean|antiseptic|wipe|disinfect/, 9], [/bruise|cut|scrape|knee|band.?aid|bandage|blister/, 1], [/screw|screwdriver/, 11],
+  [/batter|remote/, 12], [/tape|duct|fix/, 13], [/scissor/, 14]
+];
+let pending = 0;
+function reply(html) { $("reply").innerHTML = html; }
+function ask(text) {
+  const q = text.toLowerCase(); if (!q.trim()) return;
+  log(`you: "${text}"`, "me");
+  if (/aspirin|tylenol|acetaminophen/.test(q)) { pending = 3; reply(`I don't have that, but I do have <b>Ibuprofen</b> in compartment 3. Should I get it?<div class="row"><button class="btn p" onclick="yes()">Yes</button><button class="btn" onclick="no()">No</button></div>`); return; }
+  const hit = KEYS.find(([re]) => re.test(q));
+  if (!hit) { reply("I don't think I have anything for that in the cabinet. I can only offer what's actually stocked."); return; }
+  pending = hit[1];
+  document.querySelectorAll(".cell").forEach(c => c.classList.remove("hit")); $("cell" + pending)?.classList.add("hit");
+  reply(`I have <b>${INV[pending - 1]}</b> in compartment ${pending}. Should I get it?<div class="row"><button class="btn p" onclick="yes()">Yes, get it</button><button class="btn" onclick="no()">No</button></div>`);
+}
+window.yes = () => { const n = pending; pending = 0; reply(`The ${INV[n - 1].toLowerCase()} are on their way.`); retrieve(n, "voice"); };
+window.no = () => { pending = 0; reply("No problem. What else can I get for you?"); document.querySelectorAll(".cell").forEach(c => c.classList.remove("hit")); };
+$("askBtn").onclick = () => { ask($("q").value); $("q").value = ""; };
+$("q").addEventListener("keydown", e => { if (e.key === "Enter") $("askBtn").click(); });
+["I have an itchy eye", "I bruised my knee", "Do you have aspirin?", "I need to fix something"].forEach(s => {
+  const b = document.createElement("button"); b.textContent = s; b.onclick = () => ask(s); $("chips").appendChild(b);
+});
+renderCells(); draw(); setTraySide("slot"); log("ESP32: === Index v1 ===  (simulated)");
+
+// ================= WIRING DIAGRAM =================
+const HW = {
+  esp:   { t: "Maker-ESP32 (the brain)", d: ["ESP32-WROOM-32E with two on-board TB67H450 H-bridge pairs that drive both steppers directly.", "Runs the firmware: homing, the step sequencer, its own Wi-Fi access point and web page, and the USB serial link.", "Positions, names and the reach angle are saved in flash (Preferences), so they survive power-offs."] },
+  pwr:   { t: "12 V wall adapter", d: ["5.5 × 2.1 mm, center-positive, into the board's DC jack.", "Replaced the 3S LiPo. Holding current drained the battery in minutes, so the firmware now releases the motors when idle."] },
+  x:     { t: "X stepper · horizontal", d: ["Drives a GT2 belt on the bottom linear rail at 5 steps/mm.", "Stepper block A, driven from <code>GPIO 13 · 27 · 4 · 2</code> (13/27 swapped in software to fix direction).", "Released after every move: the horizontal axis stays put unpowered."] },
+  z:     { t: "Z stepper · vertical", d: ["Drives a GT2 belt on the vertical rail. Positive is up.", "Stepper block B, driven from <code>GPIO 17 · 12 · 15 · 14</code>.", "Holds while a tray is out, then releases 5 s after parking."] },
+  servo: { t: "Y servo · rack & pinion", d: ["Signal on <code>GPIO 25</code>. 175° = retracted, lower = extended (5° margins).", "Moves in 2° steps every 20 ms so it doesn't jerk."] },
+  mag:   { t: "Electromagnet module", d: ["Switched by <code>GPIO 26</code>.", "Locks onto a steel washer or screw in each 3D-printed tray. 400 ms settle before pulling."] },
+  sw:    { t: "Limit switches ×3", d: ["X-min <code>GPIO 32</code> · X-max <code>GPIO 21</code> · Z-min <code>GPIO 33</code>.", "Wired C → GND, NO → pin, with internal pull-ups (NC unused).", "Debounced: 5 ms to press, 30 ms to release. Z's top limit is in software."] },
+  usb:   { t: "Laptop · USB (Web Serial)", d: ["115200 baud. The voice page sends <code>GO n</code>, <code>RET</code>, <code>HOME</code>, <code>STOP</code>.", "The robot replies <code>ACK n</code>, and the page rejects any mismatch or timeout."] },
+  phone: { t: "Phone · Wi-Fi", d: ["The ESP32 broadcasts its own network, <code>Index</code>. Open <code>192.168.4.1</code> with no app and no internet.", "Search, retrieve, return, rename, jog, and teach positions."] },
+};
+(function buildWiring() {
+  const s = $("wiring");
+  el("rect", { x: 0, y: 0, width: 900, height: 600, rx: 14, fill: "#0f2224" }, s);
+  const box = (id, x, y, w, h, title, sub, col) => {
+    const g = el("g", { class: "node", "data-id": id }, s);
+    el("rect", { x, y, width: w, height: h, rx: 12, fill: "#172f30", stroke: col || "#46b2a0", "stroke-width": 2 }, g);
+    el("text", { x: x + w / 2, y: y + h / 2 - (sub ? 4 : -5), fill: "#f3f1ec", "font-size": 15, "font-weight": 700, "text-anchor": "middle" }, g, title);
+    if (sub) el("text", { x: x + w / 2, y: y + h / 2 + 16, fill: "#93aaa6", "font-size": 12, "text-anchor": "middle" }, g, sub);
+    g.onclick = () => selectHW(id); return g;
+  };
+  const wire = (ids, d, col, lbl, lx, ly) => {
+    el("path", { class: "wire", "data-ids": ids, d, fill: "none", stroke: col, "stroke-width": 3, "stroke-linecap": "round" }, s);
+    if (lbl) el("text", { x: lx, y: ly, fill: col, "font-size": 12, "font-weight": 700, "font-family": "Consolas,monospace" }, s, lbl);
+  };
+  wire("pwr", "M170 95 H330 V230", "#e87064", "12 V DC", 200, 88);
+  wire("x", "M170 300 H330", "#7fb8ff", "A1 A2 B1 B2", 186, 292);
+  wire("z", "M570 300 H730", "#c79bff", "A1 A2 B1 B2", 590, 292);
+  wire("servo", "M380 380 V470 H130 V500", "#f2c14e", "GPIO 25", 136, 462);
+  wire("mag", "M430 380 V520 H330", "#e87064", "GPIO 26", 340, 512);
+  wire("sw", "M480 380 V520 H560", "#9be38b", "GPIO 32·21·33", 492, 470);
+  wire("usb", "M520 230 V95 H730", "#f3f1ec", "USB · Web Serial", 566, 88);
+  wire("phone", "M570 250 Q680 180 730 180", "#46b2a0", "Wi-Fi AP", 650, 170);
+  el("path", { d: "M690 140 q8 -8 16 0 M684 132 q14 -14 28 0", stroke: "#46b2a0", "stroke-width": 2, fill: "none" }, s);
+  box("pwr", 20, 60, 150, 70, "12 V adapter", "wall power");
+  box("esp", 330, 230, 240, 150, "Maker-ESP32", "2× H-bridge · Wi-Fi · USB", "#f9bfa5");
+  box("x", 20, 265, 150, 70, "X stepper", "horizontal belt");
+  box("z", 730, 265, 150, 70, "Z stepper", "vertical belt");
+  box("servo", 40, 500, 180, 70, "Y servo", "rack & pinion");
+  box("mag", 240, 500, 180, 70, "Electromagnet", "grabs the tray");
+  box("sw", 560, 500, 220, 70, "3 limit switches", "X-min · X-max · Z-min");
+  box("usb", 730, 60, 150, 70, "Laptop", "voice agent page");
+  box("phone", 730, 150, 150, 70, "Phone", "192.168.4.1");
+  el("text", { x: 450, y: 590, fill: "#93aaa6", "font-size": 12, "text-anchor": "middle" }, s, "Simplified: shared GND and 5 V servo/magnet power are not drawn");
+})();
+function selectHW(id) {
+  const s = $("wiring"); s.classList.add("dim");
+  s.querySelectorAll(".node").forEach(n => n.classList.toggle("sel", n.dataset.id === id || (id !== "esp" && n.dataset.id === "esp")));
+  s.querySelectorAll(".wire").forEach(w => w.classList.toggle("on", id === "esp" || w.dataset.ids === id));
+  const h = HW[id]; $("hwDetail").innerHTML = `<h4>${h.t}</h4>` + h.d.map(p => `<p>${p}</p>`).join("");
+}
+selectHW("esp");
+
+// ================= SOFTWARE FLOW =================
+const SW = {
+  you:   { t: "You", d: ["Say what you need in normal words: \"I bruised my knee.\" You don't need to know the item's name or where it is."] },
+  agent: { t: "ElevenLabs voice agent", d: ["Speech-to-text, an LLM, and text-to-speech in one conversation.", "Its prompt rules: only offer what's in stock, never give medical advice, and always ask before moving."] },
+  tools: { t: "Client tools (in the browser)", d: ["<code>get_inventory</code> reads the 15 compartments and which tray is out.", "<code>retrieve_item(compartment)</code> and <code>return_item()</code> run on the page, not in the cloud, so the agent can only act through them."] },
+  page:  { t: "Voice page (JavaScript)", d: ["Talks to the robot over the Web Serial API at 115200 baud.", "Sends <code>GO n</code> and waits up to 2 s for <code>ACK n</code>. A mismatch or silence is reported back to the agent as an error.", "If another tray is out, it sends <code>RET</code> first, waits for <i>returned</i>, then fetches."] },
+  phone: { t: "Phone browser", d: ["Joins the robot's own Wi-Fi network and opens <code>192.168.4.1</code>. The page polls <code>/status</code> every 500 ms and sends <code>/cmd?a=…</code>."] },
+  web:   { t: "ESP32 web server", d: ["Serves the control page from flash. Commands: go, ret, home, park, stop, jog, y, mag, save, goto, fill, savedel, name."] },
+  serial:{ t: "Serial command parser", d: ["Reads lines like <code>GO 10</code>, <code>RET</code>, <code>HOME</code>, <code>STOP</code> and answers <code>ACK n</code>, <code>OK</code> or <code>ERR reason</code>."] },
+  cmd:   { t: "Command checks", d: ["Refuses a retrieval if the compartment is empty, untaught, busy, or another tray is out (\"ERR compartment 10 is still out\").", "Every check happens on the robot, so the robot is the single source of truth."] },
+  seq:   { t: "Non-blocking step sequencer", d: ["Each job is a list of steps: HOME · MOVE · SERVO · MAG · WAIT.", "One step advances per loop, so motors, servo easing, Wi-Fi and serial all run at the same time.", "It watches the limit switches during every move and stops safely if one is hit unexpectedly."] },
+  hw:    { t: "Motors · servo · magnet", d: ["AccelStepper drives X and Z with acceleration. ESP32Servo eases the rack. A GPIO switches the magnet."] },
+  flash: { t: "Flash storage", d: ["Saves the 15 taught positions, the delivery point, the reach angle and the names.", "Teach compartments 1, 5 and 11, and the firmware calculates the other 12."] },
+};
+(function buildFlow() {
+  const s = $("flow");
+  el("rect", { x: 0, y: 0, width: 900, height: 640, rx: 14, fill: "#0f2224" }, s);
+  el("defs", {}, s).innerHTML = '<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#f9bfa5"/></marker>';
+  const arrow = (d, lbl, lx, ly) => { el("path", { d, fill: "none", stroke: "#f9bfa5", "stroke-width": 2.5, "marker-end": "url(#ar)" }, s); if (lbl) el("text", { x: lx, y: ly, fill: "#f9bfa5", "font-size": 12, "font-family": "Consolas,monospace" }, s, lbl); };
+  const box = (id, x, y, w, h, title, sub, col) => {
+    const g = el("g", { class: "node", "data-id": id }, s);
+    el("rect", { x, y, width: w, height: h, rx: 12, fill: "#172f30", stroke: col || "#46b2a0", "stroke-width": 2 }, g);
+    el("text", { x: x + w / 2, y: y + h / 2 - (sub ? 3 : -5), fill: "#f3f1ec", "font-size": 14.5, "font-weight": 700, "text-anchor": "middle" }, g, title);
+    if (sub) el("text", { x: x + w / 2, y: y + h / 2 + 15, fill: "#93aaa6", "font-size": 11.5, "text-anchor": "middle" }, g, sub);
+    g.onclick = () => selectSW(id);
+  };
+  el("text", { x: 230, y: 30, fill: "#93aaa6", "font-size": 12, "font-weight": 700, "text-anchor": "middle", "letter-spacing": "2" }, s, "VOICE PATH · LAPTOP");
+  el("text", { x: 680, y: 30, fill: "#93aaa6", "font-size": 12, "font-weight": 700, "text-anchor": "middle", "letter-spacing": "2" }, s, "PHONE PATH · WI-FI");
+  el("rect", { x: 30, y: 335, width: 840, height: 290, rx: 16, fill: "none", stroke: "#24433f", "stroke-dasharray": "6 6" }, s);
+  el("text", { x: 50, y: 612, fill: "#f9bfa5", "font-size": 12, "font-weight": 700, "letter-spacing": "2" }, s, "ON THE ESP32 (FIRMWARE)");
+  box("you", 140, 45, 180, 50, "You speak", "\"I bruised my knee\"", "#f9bfa5");
+  box("agent", 120, 120, 220, 56, "ElevenLabs agent", "voice + LLM + rules");
+  box("tools", 120, 200, 220, 56, "Client tools", "inventory · retrieve · return");
+  box("page", 120, 270, 220, 52, "Voice page (JS)", "Web Serial · ACK check");
+  box("phone", 580, 120, 200, 56, "Phone browser", "192.168.4.1");
+  box("web", 580, 380, 200, 56, "Web server", "/status · /cmd");
+  box("serial", 120, 380, 220, 56, "Serial parser", "GO n · RET · HOME · STOP");
+  box("cmd", 340, 460, 220, 56, "Command checks", "empty? taught? tray out?", "#f9bfa5");
+  box("seq", 340, 545, 220, 56, "Step sequencer", "HOME·MOVE·SERVO·MAG·WAIT");
+  box("hw", 640, 545, 200, 56, "Motors · servo · magnet", "AccelStepper · ESP32Servo");
+  box("flash", 640, 460, 200, 56, "Flash storage", "positions · names");
+  arrow("M230 95 V118"); arrow("M230 176 V198"); arrow("M230 256 V268");
+  arrow("M230 322 V378", "GO n", 240, 355);
+  arrow("M680 176 V378", "Wi-Fi", 690, 280);
+  arrow("M300 436 Q330 470 338 480"); arrow("M620 436 Q590 470 562 480");
+  arrow("M450 516 V543"); arrow("M560 573 H638"); arrow("M640 488 H562");
+  arrow("M150 380 Q60 330 118 296", "ACK n", 40, 340);
+})();
+function selectSW(id) {
+  $("flow").querySelectorAll(".node").forEach(n => n.classList.toggle("sel", n.dataset.id === id));
+  const h = SW[id]; $("swDetail").innerHTML = `<h4>${h.t}</h4>` + h.d.map(p => `<p>${p}</p>`).join("");
+}
+selectSW("seq");
+</script>
+</body>
+</html>

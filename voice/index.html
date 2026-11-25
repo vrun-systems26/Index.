@@ -31,6 +31,7 @@
   .tray{margin-top:16px;padding:14px 16px;border-radius:14px;background:#FFFBF8;display:flex;
         justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
   .tray.on{background:#2A5F5A;color:#fff}
+  .tray.ask{background:#F7E2D6;border:2px solid #C0704E}.tray[hidden]{display:none}
   .tray .small{font:12px ui-monospace,monospace;opacity:.75}
   .tray .big{font-size:17px;font-weight:700}
   .tray button{background:#2A5F5A;color:#fff}.tray.on button{background:#fff;color:#2A5F5A}
@@ -72,6 +73,10 @@
         <div><div class="small" id="traySmall">DELIVERY SPOT</div><div class="big" id="trayTxt">No tray out</div></div>
         <button id="btnReturn">Return tray</button>
       </div>
+      <div class="tray ask" id="ask" hidden>
+        <div><div class="small">WAITING FOR YOUR OK</div><div class="big" id="askTxt"></div></div>
+        <div><button id="askYes">Yes, bring it</button> <button id="askNo">No</button></div>
+      </div>
       <div class="last" id="last">
         <div class="small">LAST COMMAND</div>
         <div class="big" id="lastBig">None yet</div>
@@ -91,6 +96,7 @@
 
 <script type="module">
 import { Conversation } from "https://cdn.jsdelivr.net/npm/@elevenlabs/client/+esm";
+import { ConfirmGate, guardTools } from "./confirm.js";
 
 // ---------- inventory (empty string = empty compartment) ----------
 const INVENTORY = [
@@ -318,6 +324,35 @@ $("btnReturn").onclick = () => returnTray("button");
 renderGrid();
 render();
 
+// ---------- confirmation gate: the agent cannot move the robot unless the person said so ----------
+const gate = new ConfirmGate(INVENTORY);
+let asking = null;
+function showAsk(kind, c) {
+  asking = { kind, c };
+  $("askTxt").textContent = kind === "retrieve" ? `Bring compartment ${c} · ${nameOf(c)}?` : "Put the tray back?";
+  $("askYes").textContent = kind === "retrieve" ? "Yes, bring it" : "Yes, put it back";
+  $("ask").hidden = false;
+  addLog("sys", "✗ blocked: the agent tried to move without your OK");
+}
+function hideAsk() { asking = null; $("ask").hidden = true; }
+$("askYes").onclick = () => {
+  const a = asking;
+  gate.reset();
+  hideAsk();
+  if (a) a.kind === "retrieve" ? retrieve(a.c, "your tap") : returnTray("your tap");
+};
+$("askNo").onclick = () => { gate.reset(); hideAsk(); addLog("sys", "you said no"); };
+const agentTools = guardTools({
+  gate, inventory: INVENTORY, onBlocked: showAsk,
+  retrieve: (c, s) => { hideAsk(); return retrieve(c, s); },
+  returnTray: s => { hideAsk(); return returnTray(s); },
+});
+function heard(source, message) {
+  addLog(source === "user" ? "user" : "agent", message);
+  if (source === "user") addLog("sys", gate.userSaid(message));
+  else gate.agentSaid(message);
+}
+
 // ---------- voice agent ----------
 let convo = null;
 try { $("agentId").value = localStorage.getItem("agentId") || ""; } catch (e) {}
@@ -333,6 +368,8 @@ $("btnTalk").onclick = async () => {
     await navigator.mediaDevices.getUserMedia({ audio: true });
     setPill($("pAgent"), "agent: connecting…", "busy");
 
+    gate.reset();
+    hideAsk();
     convo = await Conversation.startSession({
       agentId,
       clientTools: {
@@ -345,8 +382,7 @@ $("btnTalk").onclick = async () => {
             }))
           });
         },
-        retrieve_item: async ({ compartment }) => retrieve(compartment, "voice agent"),
-        return_item:   async () => returnTray("voice agent"),
+        ...agentTools,
       },
       onConnect: () => {
         setPill($("pAgent"), "agent: live", "ok");
@@ -355,13 +391,15 @@ $("btnTalk").onclick = async () => {
       },
       onDisconnect: () => {
         convo = null;
+        gate.reset();
+        hideAsk();
         setPill($("pAgent"), "agent: off");
         $("btnTalk").textContent = "Start conversation";
         $("btnTalk").classList.remove("on");
         $("mode").textContent = "";
         addLog("sys", "conversation ended");
       },
-      onMessage: ({ source, message }) => addLog(source === "user" ? "user" : "agent", message),
+      onMessage: ({ source, message }) => heard(source, message),
       onModeChange: ({ mode }) => { $("mode").textContent = mode === "speaking" ? "🔊 speaking" : "🎙 listening"; },
       onError: e => { addLog("sys", "error: " + (e?.message || e)); setPill($("pAgent"), "agent: error", "err"); },
     });

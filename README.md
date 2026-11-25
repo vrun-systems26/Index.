@@ -7,18 +7,18 @@
 - **Demo video (4 min):** https://youtu.be/xXzuHTX-SJk
 
 ## Why
-- More than 1 in 4 U.S. adults has a disability, and mobility is the most common type (CDC).
-- 1 in 4 adults over 65 falls each year (CDC), often while reaching or climbing.
-- About half of people on long-term medication don't take it as prescribed (WHO, 2003).
+- More than 1 in 4 U.S. adults has a disability (CDC).
+- About 1 in 4 adults 65+ reports a fall each year (CDC).
+- About half of patients with chronic illness in developed countries don't take medication as prescribed (WHO, 2003).
 
-Storage assumes you can reach, see, search and remember. Labels still make you read. Smart speakers can't hand you anything. Hospital and pharmacy robots cost tens of thousands of dollars. Index brings the same idea to a kitchen, a school nurse's office or a small clinic, for about **$300 in parts**.
+Storage assumes you can reach, see, search and remember. Labels still make you read. Smart speakers can't hand you anything. Index brings the idea of a storage robot to a kitchen, a school nurse's office or a small clinic, for about **$300 in parts**.
 
 ## What it does
-- **Voice:** "I bruised my knee" → the agent finds *Bandages, compartment 1* and **moves only after you say yes**. It only offers what's in stock and never gives medical advice.
+- **Voice:** "I bruised my knee" → the agent offers *Bandages, compartment 1*. **Code, not the AI, decides if it may move:** `voice/confirm.js` unlocks one compartment only after your own words or a tap.
 - **Phone:** the ESP32 makes its own Wi-Fi network (`Index`) and serves its own page at `192.168.4.1`, with no app or internet needed. You can search, retrieve, return, rename, and mark compartments empty.
 - **Retrieve:** the X and Z belts move the arm to the compartment, the Y rack extends, and an electromagnet grabs the tray's steel washer. The tray is delivered on top of the cabinet.
 - **Return:** the tray goes back into its exact compartment. If you ask for something else while a tray is out, Index returns that one first.
-- **Verified commands:** the page sends `GO n`, and the robot must answer `ACK n`. A mismatch or a timeout is rejected.
+- **Verified commands:** the page sends `GO n`, and the robot must answer `ACK n`. A mismatch or a timeout is rejected. This checks the command, not whether a tray is attached.
 
 ## Hardware
 | Part | Details |
@@ -60,6 +60,19 @@ Storage assumes you can reach, see, search and remember. Labels still make you r
    - Jog to compartments 1, 5 and 11 and **Save** each one, then press **Fill grid**.
    - Save the reach angle and the delivery point.
 3. **Voice (optional).** Create an ElevenLabs agent with the three client tools above. Run `voice/start-voice.bat`, or `python -m http.server 5190` in `voice/`. Open it in Chrome, paste your agent ID, click **Connect robot (USB)**, then **Start conversation**.
+
+## Confirmation and tests
+The voice agent's movement tools are wrapped by `voice/confirm.js`. Approval comes only from the person's transcript or an on-screen tap, never from the agent. It is for one compartment, works once, and expires after 30 seconds. Negative, unclear, or ambiguous answers stay locked. It can still be wrong if speech is transcribed wrongly.
+
+```bash
+cd voice && node --test
+```
+
+## Known limits
+- A tray can fall, and nothing senses whether one is attached.
+- Motion is open-loop; missed steps aren't detected.
+- Reconnecting USB restarts the board, which forgets a tray that is out.
+- Not a medical device. It doesn't check medicines or doses.
 
 ## Axis convention
 X = horizontal · Y = rack depth · Z = vertical

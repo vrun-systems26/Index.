@@ -4,9 +4,7 @@
 
 **Index is a voice-controlled robotic cabinet.** You ask for what you need, by voice or from your phone. A 3-axis robot pulls out the exact tray, brings it to one spot within reach, and puts it back when you're done.
 
-- **Live site (interactive simulator, wiring diagram, software flowchart):** https://index-robot-cabinet.vercel.app
-- **Demo video (3 min):** https://youtu.be/VH-3CrXZQcE
-- **Full pitch (5 min):** https://youtu.be/mBE0BZBnR84
+- **Demo video (4 min):** https://youtu.be/xXzuHTX-SJk
 
 ## Why
 - More than 1 in 4 U.S. adults has a disability, and mobility is the most common type (CDC).

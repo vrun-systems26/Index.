@@ -4,8 +4,6 @@
 
 **Index is a voice-controlled robotic cabinet.** You ask for what you need, by voice or from your phone. A 3-axis robot pulls out the exact tray, brings it to one spot within reach, and puts it back when you're done.
 
-- **Demo video (4 min):** https://youtu.be/xXzuHTX-SJk
-
 ## Why
 - More than 1 in 4 U.S. adults has a disability (CDC).
 - About 1 in 4 adults 65+ reports a fall each year (CDC).

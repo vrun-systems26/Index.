@@ -68,6 +68,19 @@ The voice agent's movement tools are wrapped by `voice/confirm.js`. Approval com
 cd voice && node --test
 ```
 
+Requires Node.js 18 or newer. The tests use a simulated robot; the confirmation check has not yet been run on the physical robot.
+
+## AI tools used
+- **ElevenLabs Conversational AI (in the project):** speech-to-text, a language model, and text-to-speech for the voice agent. It can only call the browser tools above; it never drives the motors directly.
+- **Claude Code (during development):** helped write much of the firmware, the web pages, the confirmation check and its tests, and helped edit the demo video. All of it was tested on the real robot or with the automated tests, and changed where it failed (X axis direction, switch debouncing, the return lift, and the tray-release move).
+
+## Credits
+- [AccelStepper](https://www.airspayce.com/mikem/arduino/AccelStepper/) by Mike McCauley: stepper motion.
+- [ESP32Servo](https://github.com/madhephaestus/ESP32Servo): servo control.
+- [Arduino core for ESP32](https://github.com/espressif/arduino-esp32) by Espressif: WiFi, WebServer and Preferences.
+- [@elevenlabs/client](https://www.npmjs.com/package/@elevenlabs/client): voice agent connection in the browser.
+- Web Serial API (Chrome and Edge): USB link from the voice page to the robot.
+
 ## Known limits
 - A tray can fall, and nothing senses whether one is attached.
 - Motion is open-loop; missed steps aren't detected.

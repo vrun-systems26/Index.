@@ -76,7 +76,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px}
 <body>
 <nav><div class="wrap">
   <div class="logo">Index<span>.</span></div>
-  <a href="#try">Try it</a><a href="#hardware">Hardware</a><a href="#software">Software</a><a href="#build">Build</a><a href="voice.html">Voice page</a><a href="#video" id="navVideo" hidden>Video</a>
+  <a href="#try">Try it</a><a href="#hardware">Hardware</a><a href="#software">Software</a><a href="#build">Build</a><a href="voice.html">Voice page</a>
 </div></nav>
 
 <div class="wrap">
@@ -86,7 +86,7 @@ footer{padding:40px 0;color:var(--muted);font-size:14px}
       <h1>Index<span style="color:var(--peach)">.</span></h1>
       <p class="tag">Ask for it, and it's in your hand.</p>
       <p class="lead">Storage assumes you can reach, see, search and remember. Index doesn't. Ask for what you need by voice or from your phone. A 3-axis robot pulls out the exact tray, brings it to one spot within reach, and puts it back when you're done.</p>
-      <div class="btns"><a class="btn p" href="#try">Try the simulator ↓</a><a class="btn" href="#hardware">How it's built</a><a class="btn" id="heroVideo" href="#video" hidden>▶ Watch the demo</a></div>
+      <div class="btns"><a class="btn p" href="#try">Try the simulator ↓</a><a class="btn" href="#hardware">How it's built</a></div>
     </div>
     <img src="img/robot.jpg" alt="The Index robot: a vertical rail and rack in front of a 15-compartment cabinet, with the control page on a laptop">
   </div>
@@ -210,20 +210,9 @@ footer{padding:40px 0;color:var(--muted);font-size:14px}
   </div>
 </div></section>
 
-<section id="video" hidden><div class="wrap">
-  <div class="kicker">Video</div><h2>See Index work</h2>
-  <div style="position:relative;padding-top:56.25%;margin-top:22px;border-radius:18px;overflow:hidden;border:2px solid var(--tealD)">
-    <iframe src="https://www.youtube-nocookie.com/embed/VH-3CrXZQcE" title="Index 3-minute demo" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>
-  </div>
-  <p class="lead" style="margin-top:12px"><a id="videoLink" href="#" target="_blank" rel="noopener">3-minute demo on YouTube ↗</a> · <a href="https://youtu.be/mBE0BZBnR84" target="_blank" rel="noopener">Full 5-minute pitch ↗</a></p>
-</div></section>
-
 <footer><div class="wrap">Index · built with ESP32, Arduino C++, AccelStepper, a servo rack &amp; pinion, an electromagnet, 3D-printed trays, Web Serial, and an ElevenLabs voice agent. The <a href="voice.html">voice page</a> is the real control page. Without the robot plugged in, it runs in simulation.</div></footer>
 
 <script>
-const VIDEO_URL = "https://youtu.be/VH-3CrXZQcE";
-if (VIDEO_URL) { for (const id of ["video","navVideo","heroVideo"]) document.getElementById(id).hidden = false; document.getElementById("videoLink").href = VIDEO_URL; }
-
 const $ = id => document.getElementById(id);
 const NS = "http://www.w3.org/2000/svg";
 function el(tag, attrs, parent, text) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; if (parent) parent.appendChild(e); return e; }
